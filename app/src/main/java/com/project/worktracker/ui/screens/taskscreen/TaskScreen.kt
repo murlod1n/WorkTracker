@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,22 +53,21 @@ fun TaskListScreen(state: TaskListState, actions: TaskListActions) {
 
     Column(
         Modifier
-            .background(Color.White)
+            .background(Color(27, 27, 27, 255))
             .padding(16.dp, 16.dp, 16.dp, 16.dp), verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        TaskCarousel(
-            taskList = state.taskList,
-            setCurrentTask = {
-                actions.setCurrentTask(it)
-                actions.onResetWatch()
-                actions.onRestResetWatch()
-                isPlay = false
-            })
 
         if (state.taskList.isNotEmpty()) {
+            TaskCarousel(
+                taskList = state.taskList,
+                setCurrentTask = {
+                    actions.setCurrentTask(it)
+                    actions.onResetWatch()
+                    actions.onRestResetWatch()
+                    isPlay = false
+                })
             Column {
-
                 CustomClock(
                     onStartWatch = actions.onStartWatch,
                     onPauseWatch = actions.onPauseWatch,
@@ -88,6 +88,9 @@ fun TaskListScreen(state: TaskListState, actions: TaskListActions) {
                     Button(
                         modifier = Modifier.size(64.dp),
                         contentPadding = PaddingValues(1.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(1, 203, 238, 255)
+                        ),
                         onClick = {
                             if (isPlay) {
                                 actions.onPauseWatch()
@@ -99,27 +102,42 @@ fun TaskListScreen(state: TaskListState, actions: TaskListActions) {
                     ) {
                         Icon(
                             imageVector = if (isPlay) Icons.Default.Clear else Icons.Filled.PlayArrow,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color(29, 29, 29, 255)
                         )
                     }
                     Button(
                         modifier = Modifier.size(64.dp),
                         contentPadding = PaddingValues(1.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(1, 203, 238, 255)
+                        ),
                         onClick = {
                             actions.onResetWatch()
                             isPlay = false
                         }
                     ) {
-                        Icon(imageVector = Icons.Filled.Refresh, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Filled.Refresh,
+                            contentDescription = null,
+                            tint = Color(29, 29, 29, 255)
+                        )
                     }
                     Button(
                         modifier = Modifier.size(64.dp),
                         contentPadding = PaddingValues(1.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(1, 203, 238, 255)
+                        ),
                         onClick = {
                             showSheet = true
                         }
                     ) {
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = null,
+                            tint = Color(29, 29, 29, 255)
+                        )
                     }
                 }
             }
@@ -129,11 +147,14 @@ fun TaskListScreen(state: TaskListState, actions: TaskListActions) {
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(1, 203, 238, 255)
+                    ),
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.small,
                     contentPadding = PaddingValues(10.dp),
                     onClick = { showSheet = true }) {
-                    Text(text = "Add new task")
+                    Text(text = "Add new task", color = Color(29, 29, 29, 255))
                 }
             }
         } else {

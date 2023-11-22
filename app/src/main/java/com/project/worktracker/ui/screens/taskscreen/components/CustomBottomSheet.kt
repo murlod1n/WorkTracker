@@ -63,7 +63,7 @@ fun CustomBottomSheet(
         ) {
             Text(
                 modifier = Modifier.padding(bottom = 16.dp),
-                text = "Add new project",
+                text = "Add new task",
                 style = MaterialTheme.typography.titleLarge
             )
             OutlinedTextField(

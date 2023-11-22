@@ -15,11 +15,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.inset
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -102,14 +109,13 @@ fun CustomClock(
         }
     }
 
-
     val stroke = 8.dp
-    val color = Color.Blue
+    val color = Color.Cyan
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.size(280.dp)) {
             val innerRadius = (size.minDimension - stroke.toPx()) / 2
-            val innerRadiusSecond = (size.minDimension - stroke.toPx()) / 2.2f
+            val innerRadiusSecond = (size.minDimension - stroke.toPx()) / 2.4f
             val halfSize = size / 2.0f
             val topLeft = Offset(
                 x = halfSize.width - innerRadius,
@@ -128,14 +134,15 @@ fun CustomClock(
                 height = innerRadiusSecond * 2
             )
             val startAngle = -90f
+
             drawArc(
-                color = Color.LightGray,
+                color = Color(163, 157, 157, 100),
                 startAngle = startAngle,
                 sweepAngle = 360f,
                 topLeft = topLeftSecond,
                 size = sizeSecond,
                 useCenter = false,
-                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = 16.dp.toPx())
             )
             if (restTime > 0L) {
                 drawArc(
@@ -149,34 +156,34 @@ fun CustomClock(
                 )
             }
             drawArc(
-                color = Color.LightGray,
+                color = Color(163, 157, 157, 100),
                 startAngle = startAngle+5f,
                 sweepAngle = 168f,
                 topLeft = topLeft,
                 size = size,
                 useCenter = false,
-                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = 16.dp.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = if (counter > 0) Color.Green else Color.LightGray,
+                color = if (counter > 0) Color.Green else Color(163, 157, 157, 100),
                 startAngle = 91f,
                 sweepAngle = 1f,
                 topLeft = topLeft,
                 size = size,
                 useCenter = false,
-                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = 10.dp.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = Color.LightGray,
+                color = Color(163, 157, 157, 100),
                 startAngle = 100f,
                 sweepAngle = 73f,
                 topLeft = topLeft,
                 size = size,
                 useCenter = false,
-                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = 16.dp.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = if (counter > 1) Color.Green else Color.LightGray,
+                color = if (counter > 1) Color.Green else Color(163, 157, 157, 100),
                 startAngle = 181f,
                 sweepAngle = 1f,
                 topLeft = topLeft,
@@ -185,16 +192,16 @@ fun CustomClock(
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = Color.LightGray,
+                color = Color(163, 157, 157, 100),
                 startAngle = 190f,
                 sweepAngle = 28f,
                 topLeft = topLeft,
                 size = size,
                 useCenter = false,
-                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = 16.dp.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = if (counter > 2) Color.Green else Color.LightGray,
+                color = if (counter > 2) Color.Green else Color(163, 157, 157, 100),
                 startAngle = 226f,
                 sweepAngle = 1f,
                 topLeft = topLeft,
@@ -203,13 +210,13 @@ fun CustomClock(
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = Color.LightGray,
+                color = Color(163, 157, 157, 100),
                 startAngle = 235f,
                 sweepAngle = 27f,
                 topLeft = topLeft,
                 size = size,
                 useCenter = false,
-                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = 16.dp.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
                 color = color,
@@ -250,6 +257,7 @@ fun CustomClock(
         }
         Text(
             text = formattedTime, style = TextStyle(
+                color = Color.White,
                 fontSize = 34.sp, fontWeight = FontWeight.Black
             )
         )
