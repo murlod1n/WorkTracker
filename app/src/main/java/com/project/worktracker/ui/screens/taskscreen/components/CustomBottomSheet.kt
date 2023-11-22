@@ -1,36 +1,25 @@
-package com.project.worktracker.ui.screens.components
+package com.project.worktracker.ui.screens.taskscreen.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.project.worktracker.models.TaskUI
 import java.text.SimpleDateFormat
+import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,25 +37,19 @@ import java.text.SimpleDateFormat
 fun CustomBottomSheet(
     onDismiss: () -> Unit,
     insertTask: (TaskUI) -> Unit = {},
-    title: String = "",
-    taskId: Long = 0,
+    taskUI: TaskUI? = null
 ) {
 
     val modalBottomSheetState = rememberModalBottomSheetState()
 
-    var taskTitle by remember { mutableStateOf(title) }
+    var taskTitle by remember { mutableStateOf(if(taskUI != null) taskUI.taskTitle else "") }
 
     val state = rememberTimePickerState(
-        is24Hour = true
+        is24Hour = true,
+        initialHour = if(taskUI != null) SimpleDateFormat("hh").format(Date(taskUI.taskDuration)).toInt() - 3 else 0,
+        initialMinute = if(taskUI != null) SimpleDateFormat("mm").format(Date(taskUI.taskDuration)).toInt() else 0,
     )
 
-    val colorList = listOf(
-        0xFF9CCC65,
-        0xFF65CCB4,
-        0xFF2D55CE,
-        0xFFA95BD3,
-        0xFFBD2A6A,
-    )
 
     ModalBottomSheet(
         containerColor = Color.White,
@@ -122,9 +106,8 @@ fun CustomBottomSheet(
 
                         insertTask(
                             TaskUI(
-                                taskId = 0,
+                                taskId = taskUI?.taskId ?: 0,
                                 taskTitle = taskTitle,
-                                taskDurationProgress = 0,
                                 taskDuration = time
                             )
                         )

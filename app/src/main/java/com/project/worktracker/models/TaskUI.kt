@@ -1,8 +1,7 @@
 package com.project.worktracker.models
 
 data class TaskUI(
-    val taskId: Int,
-    val taskTitle: String,
-    val taskDuration: Long,
-    val taskDurationProgress: Long
+    val taskId: Int = 0,
+    val taskTitle: String = "",
+    val taskDuration: Long = 0,
 )

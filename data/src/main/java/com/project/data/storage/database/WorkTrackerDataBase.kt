@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.project.data.storage.dao.TaskDao
 import com.project.data.storage.models.TaskEntity
 
-@Database(entities = [TaskEntity::class], version = 1, exportSchema = false)
+@Database(entities = [TaskEntity::class], version = 2, exportSchema = false)
 abstract class WorkTrackerDataBase: RoomDatabase() {
 
     abstract fun getTaskDao() : TaskDao

@@ -1,10 +1,7 @@
 package com.project.worktracker.ui.screens.taskscreen
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.domain.usecases.GetAllTasksUseCase
@@ -27,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    getAllTasksUseCase: GetAllTasksUseCase,
+    private val getAllTasksUseCase: GetAllTasksUseCase,
     private val insertTaskUseCase: InsertTaskUseCase
 ) : ViewModel() {
 
@@ -44,7 +41,11 @@ class TaskViewModel @Inject constructor(
                     taskList = tasks.map { task -> task.toTaskUI() }
                 )
             }
+            if (_stateFlow.value.taskList.isNotEmpty()) {
+                setCurrentTask(_stateFlow.value.taskList[0])
+            }
         }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -78,7 +79,8 @@ class TaskViewModel @Inject constructor(
             formattedTime = "00:00:00",
             coroutineScope = CoroutineScope(Dispatchers.Main),
             isActive = false,
-            lastTimestamp = 0L
+            lastTimestamp = 0L,
+            time = 0L
         )
         timeMillis = 0L
     }
@@ -104,6 +106,12 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    fun setCurrentTask(task: TaskUI) {
+        _stateFlow.value = _stateFlow.value.copy(
+            currentTask = task
+        )
+    }
+
     fun onRestPauseWatch() {
         _stateFlow.value = _stateFlow.value.copy(restIsActive = false)
     }
@@ -123,6 +131,11 @@ class TaskViewModel @Inject constructor(
     fun insertTask(taskUI: TaskUI) {
         viewModelScope.launch {
             insertTaskUseCase(taskUI.toTask())
+            getAllTasksUseCase().collect { tasks ->
+                _stateFlow.value = _stateFlow.value.copy(
+                    taskList = tasks.map { task -> task.toTaskUI() }
+                )
+            }
         }
     }
 

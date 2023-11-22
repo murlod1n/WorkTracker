@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.project.worktracker.models.TaskUI
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -24,6 +23,8 @@ class TaskListCoordinator(
     fun onRestStartWatch() = viewModel.onRestStartWatch()
     fun onRestPauseWatch() = viewModel.onRestPauseWatch()
     fun onRestResetWatch() = viewModel.onRestResetWatch()
+
+    fun setCurrentTask(task: TaskUI) = viewModel.setCurrentTask(task = task)
 }
 
 

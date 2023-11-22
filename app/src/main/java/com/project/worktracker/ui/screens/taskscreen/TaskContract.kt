@@ -6,14 +6,12 @@ import com.project.worktracker.models.TaskUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 data class TaskListState constructor(
     val taskList: List<TaskUI> = listOf(),
+    val currentTask: TaskUI = TaskUI(),
 
     val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main),
     val isActive: Boolean = false,
@@ -39,4 +37,6 @@ data class TaskListActions(
     val onRestStartWatch: () -> Unit,
     val onRestPauseWatch: () -> Unit,
     val onRestResetWatch: () -> Unit,
+
+    val setCurrentTask: (TaskUI) -> Unit
 )

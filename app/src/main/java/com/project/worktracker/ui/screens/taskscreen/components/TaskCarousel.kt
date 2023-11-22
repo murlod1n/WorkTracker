@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -24,32 +23,45 @@ import com.project.worktracker.models.TaskUI
 @Composable
 fun TaskCarousel(
     taskList: List<TaskUI>,
-    currentTask: Int,
-    setCurrentTask: (Int) -> Unit
+    setCurrentTask: (TaskUI) -> Unit
 ) {
+
+    var currentTaskIndex by remember {
+        mutableIntStateOf(0)
+    }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconButton(
-            enabled = currentTask != 0,
+            enabled = currentTaskIndex != 0,
             onClick = {
-                if (currentTask != 0) setCurrentTask(currentTask - 1)
-            }) {
+                if (currentTaskIndex != 0) {
+                    currentTaskIndex--
+                    setCurrentTask(taskList[currentTaskIndex])
+                }
+            }
+        ) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = null,
-                tint = if (currentTask == 0) Color.Transparent else Color.Black
+                tint = if (currentTaskIndex == 0) Color.Transparent else Color.Black
             )
         }
-        Text(taskList[currentTask].taskTitle)
+        Text(taskList[currentTaskIndex].taskTitle)
         IconButton(
-            enabled = currentTask != taskList.size - 1,
-            onClick = { if (currentTask != taskList.size - 1) setCurrentTask(currentTask + 1) }
+            enabled = currentTaskIndex != taskList.size - 1,
+            onClick = {
+                if (currentTaskIndex != taskList.size - 1) {
+                    currentTaskIndex++
+                    setCurrentTask(taskList[currentTaskIndex])
+                }
+            }
         ) {
             Icon(
-                tint = if (currentTask == taskList.size - 1) Color.Transparent else Color.Black,
+                tint = if (currentTaskIndex == taskList.size - 1) Color.Transparent else Color.Black,
                 imageVector = Icons.Outlined.KeyboardArrowRight,
                 contentDescription = null
             )

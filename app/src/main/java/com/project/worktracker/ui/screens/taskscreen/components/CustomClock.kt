@@ -1,34 +1,20 @@
 package com.project.worktracker.ui.screens.taskscreen.components
 
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
+
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -38,8 +24,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.DecimalFormat
-import kotlin.math.floor
 
 @Composable
 fun CustomClock(
@@ -48,36 +32,62 @@ fun CustomClock(
     time: Long,
     onStartWatch: () -> Unit,
     onPauseWatch: () -> Unit,
-    onResetWatch: () -> Unit,
     onRestStartWatch: () -> Unit,
-    onRestPauseWatch: () -> Unit,
     onRestResetWatch: () -> Unit,
     restTime: Long
 ) {
 
-    var isPlay by remember {
-        mutableStateOf(false)
-    }
     var counter by remember {
         mutableIntStateOf(0)
     }
+    var lastTime by remember {
+        mutableLongStateOf(0L)
+    }
+
+    val firstArc =
+        if (time > 0L && time < (timeCount / 2) && ((time.toFloat() / timeCount) * 360f) < 168f)
+            (time.toFloat() / timeCount) * 360f
+        else
+            if (time > 0) {
+                168f
+            } else
+                0f
+
+    val secondArc =
+        if (time > (timeCount / 2) && time < ((timeCount / 2) + (timeCount / 4))
+            && (((time.toFloat() / timeCount) - 0.5f) * 360f) <= 74f
+        )
+            ((time.toFloat() / timeCount) - 0.5f) * 360f
+        else
+            75f
+
+
+    val thirdArc =
+        if (time > ((timeCount / 2) + (timeCount / 4)) && time < ((timeCount / 2) + (timeCount / 4) + (timeCount / 8))
+            && (((time.toFloat() / timeCount) - 0.75f) * 360f) <= 29f
+        )
+            ((time.toFloat() / timeCount) - 0.75f) * 360f
+        else
+            29f
+
+    val fourthArc =
+        if (time > ((timeCount / 2) + (timeCount / 4) + (timeCount / 8))
+            && (((time.toFloat() / timeCount) - 0.88f) * 360f) <= 29f
+        )
+            ((time.toFloat() / timeCount) - 0.88f) * 360f
+        else
+            29f
 
     LaunchedEffect(time) {
-        if(timeCount < time) {
+        if (timeCount < time) {
             onPauseWatch()
-        } else if(((timeCount / 2) + ((timeCount / 2) / 2) + (((timeCount / 2) / 2) / 2) < time) && (counter == 2)) {
-            counter++
-            Log.d("clock", "3" + " c = " + counter.toString())
+        } else if (((timeCount / 2) + ((timeCount / 2) / 2) + (((timeCount / 2) / 2) / 2) < time) && (counter == 2)) {
             onRestStartWatch()
             onPauseWatch()
-        } else if((((timeCount / 2) + ((timeCount / 2) / 2)) < time) && (counter == 1)) {
-            counter++
-            Log.d("clock", "2" + " c = " + counter.toString())
+        } else if ((((timeCount / 2) + ((timeCount / 2) / 2)) < time) && (counter == 1)) {
             onRestStartWatch()
             onPauseWatch()
-        } else if(((timeCount / 2) < time) && (counter == 0)) {
-            counter++
-            Log.d("clock", "1" + " c = " + counter.toString())
+        } else if (((timeCount / 2) < time) && (counter == 0)) {
             onRestStartWatch()
             onPauseWatch()
         }
@@ -85,48 +95,18 @@ fun CustomClock(
 
     LaunchedEffect(restTime) {
         if (restTime > 10000L) {
+            counter++
+
             onRestResetWatch()
             onStartWatch()
         }
     }
 
 
-
     val stroke = 8.dp
     val color = Color.Blue
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Box(modifier = Modifier
-            .size(200.dp)
-            .clip(CircleShape)
-            .clickable {
-                if (!isPlay) {
-                    onStartWatch()
-                } else {
-                    onPauseWatch()
-                }
-                isPlay = !isPlay
-            }
-        ) {
-           AnimatedVisibility(visible = isPlay) {
-               Icon(
-                   modifier = Modifier
-                       .size(200.dp),
-                   imageVector = Icons.Filled.Close,
-                   contentDescription = null,
-                   tint = Color(0,0,0,20)
-               )
-           }
-            AnimatedVisibility(visible = !isPlay) {
-                Icon(
-                    modifier = Modifier
-                        .size(200.dp),
-                    imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = null,
-                    tint = Color(0,0,0,20)
-                )
-            }
-        }
         Canvas(modifier = Modifier.size(280.dp)) {
             val innerRadius = (size.minDimension - stroke.toPx()) / 2
             val innerRadiusSecond = (size.minDimension - stroke.toPx()) / 2.2f
@@ -147,9 +127,7 @@ fun CustomClock(
                 width = innerRadiusSecond * 2,
                 height = innerRadiusSecond * 2
             )
-            //.875
             val startAngle = -90f
-            val sweep = (time / timeCount) * 360f
             drawArc(
                 color = Color.LightGray,
                 startAngle = startAngle,
@@ -159,7 +137,7 @@ fun CustomClock(
                 useCenter = false,
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
-            if(restTime > 0L) {
+            if (restTime > 0L) {
                 drawArc(
                     color = Color.Green,
                     startAngle = startAngle,
@@ -172,15 +150,15 @@ fun CustomClock(
             }
             drawArc(
                 color = Color.LightGray,
-                startAngle = startAngle,
-                sweepAngle = 173f,
+                startAngle = startAngle+5f,
+                sweepAngle = 168f,
                 topLeft = topLeft,
                 size = size,
                 useCenter = false,
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = Color.LightGray,
+                color = if (counter > 0) Color.Green else Color.LightGray,
                 startAngle = 91f,
                 sweepAngle = 1f,
                 topLeft = topLeft,
@@ -198,7 +176,7 @@ fun CustomClock(
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = Color.LightGray,
+                color = if (counter > 1) Color.Green else Color.LightGray,
                 startAngle = 181f,
                 sweepAngle = 1f,
                 topLeft = topLeft,
@@ -216,7 +194,7 @@ fun CustomClock(
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
             drawArc(
-                color = Color.LightGray,
+                color = if (counter > 2) Color.Green else Color.LightGray,
                 startAngle = 226f,
                 sweepAngle = 1f,
                 topLeft = topLeft,
@@ -233,24 +211,48 @@ fun CustomClock(
                 useCenter = false,
                 style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
             )
-            if(time > 0L) {
-                drawArc(
-                    color = color,
-                    startAngle = startAngle,
-                    sweepAngle = (time.toFloat() / timeCount)  * 360f,
-                    topLeft = topLeft,
-                    size = size,
-                    useCenter = false,
-                    style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
-                )
-            }
+            drawArc(
+                color = color,
+                startAngle = startAngle+5f,
+                sweepAngle = firstArc,
+                topLeft = topLeft,
+                size = size,
+                useCenter = false,
+                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+            )
+            drawArc(
+                color = color,
+                startAngle = startAngle + 190f,
+                sweepAngle = if(time > (timeCount / 2) && counter > 0) secondArc else 0F,
+                topLeft = topLeft,
+                size = size,
+                useCenter = false,
+                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+            )
+            drawArc(
+                color = color,
+                startAngle = startAngle + 280f,
+                sweepAngle = if(time > ((timeCount / 2) + (timeCount/4))  && counter > 1) thirdArc else 0F,
+                topLeft = topLeft,
+                size = size,
+                useCenter = false,
+                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+            )
+            drawArc(
+                color = color,
+                startAngle = startAngle + 325f,
+                sweepAngle = if(time > ((timeCount / 2) + (timeCount/4) + (timeCount / 8))  && counter > 2) fourthArc else 0F,
+                topLeft = topLeft,
+                size = size,
+                useCenter = false,
+                style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
+            )
         }
-        val num = (time.toFloat() / Math.abs(timeCount.toFloat()))
-        val df = DecimalFormat("#.###")
-        val roundOff = df.format(num)
-        Text(text = "${formattedTime}", style = TextStyle(
-            fontSize = 34.sp, fontWeight = FontWeight.Black
-        ))
+        Text(
+            text = formattedTime, style = TextStyle(
+                fontSize = 34.sp, fontWeight = FontWeight.Black
+            )
+        )
     }
 
 

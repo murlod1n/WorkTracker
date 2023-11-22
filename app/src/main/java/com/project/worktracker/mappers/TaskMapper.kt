@@ -8,12 +8,10 @@ fun Task.toTaskUI() : TaskUI = TaskUI(
     taskId = this.taskId,
     taskTitle = this.taskTitle,
     taskDuration = this.taskDuration,
-    taskDurationProgress = this.taskDurationProgress
 )
 
 fun TaskUI.toTask(): Task = Task(
     taskId = this.taskId,
     taskTitle = this.taskTitle,
     taskDuration = this.taskDuration,
-    taskDurationProgress = this.taskDurationProgress
 )

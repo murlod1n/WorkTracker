@@ -30,6 +30,7 @@ fun rememberTaskListAction(taskListCoordinator: TaskListCoordinator) : TaskListA
             onResetWatch = taskListCoordinator::onResetWatch,
             onRestPauseWatch = taskListCoordinator::onRestPauseWatch,
             onRestStartWatch = taskListCoordinator::onRestStartWatch,
-            onRestResetWatch = taskListCoordinator::onRestResetWatch
+            onRestResetWatch = taskListCoordinator::onRestResetWatch,
+            setCurrentTask = taskListCoordinator::setCurrentTask
         )
     }

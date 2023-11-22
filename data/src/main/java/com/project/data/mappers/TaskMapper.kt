@@ -7,12 +7,10 @@ fun TaskEntity.toTask() : Task = Task(
     taskId = this.taskId,
     taskTitle = this.taskTitle,
     taskDuration = this.taskDuration,
-    taskDurationProgress = this.taskDurationProgress
 )
 
 fun Task.toTaskEntity(): TaskEntity = TaskEntity(
     taskId = this.taskId,
     taskTitle = this.taskTitle,
     taskDuration = this.taskDuration,
-    taskDurationProgress = this.taskDurationProgress
 )
